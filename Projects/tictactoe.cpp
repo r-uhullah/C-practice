@@ -1,5 +1,9 @@
 #include <iostream>
 
+//To genrate a random move for the bot
+#include <ctime>
+#include <cstdlib>
+
 
 // Initializing who is playing currently
 char current_player = 'X'; 
@@ -21,6 +25,11 @@ void print_board(char board[]) {
     }
 }
 
+
+// Switcher Function (Helper) Only function to change the player who is to make a move.
+void switch_player(char &current_player) {
+    current_player = (current_player == 'X') ? 'O' : 'X';
+}
 
 // Make move function
 bool make_move(char board[], char &current_player) {
@@ -105,6 +114,21 @@ bool check_winner(char board[]) {
     return false;
 }
 
+// Random Move Bot Function
+void random_bot_move(char board[]) {
+
+    while(true) {
+        // Randomly picks a number and playes that as a move if it is available on the board if not then the loop continues.  
+        int bot_move = (rand() % 9) + 1;
+        if (board[bot_move - 1] != 'X' && board[bot_move - 1] != 'O'){
+            board[bot_move - 1] = 'O';
+
+            std::cout << "Bot move: " << bot_move << std::endl;
+            break;
+        }
+    }
+}
+
 
 // Main function
 int main() {
@@ -119,6 +143,9 @@ int main() {
     // Keeping count of how many moves have been played
     int moves_played {0};
 
+    // Gets the current time to genrate the random number for the bot move
+    srand(time(0));
+
     std::cout << "========================== Tic Tac Toe ==========================" << std::endl;
 
     bool game_over = false;
@@ -128,26 +155,42 @@ int main() {
 
         print_board(game_board);
 
-        if (make_move(game_board, current_player)) {
+        // Checking whose move is it
+        // Asking the player for move
+        if (current_player == 'X') {
+            if (make_move(game_board, current_player)) {
+                // Adding a move if everthing works fine without any illegal move or anything
+                moves_played ++;
+                
+            }
+
+        }
+        // Asking the bot for move
+        else {
             // Adding a move if everthing works fine without any illegal move or anything
-            moves_played ++;
+            moves_played ++;    
 
-            // Cheking for a draw
-            if (moves_played >= 9) {
-                std::cout << "It's a draw! No one wins." << std::endl;
-                game_over = true;
-            }
+            random_bot_move(game_board);
+            
+        }
 
-            // Checking if the function found a winner or draw
-            if (check_winner(game_board)) {
-                print_board(game_board);
-                std::cout << "Player (" << current_player << ") won!" << std::endl;
-                game_over = true;
-            } 
-            else {
-                // Only switch players if the game is successfully continuing
-                current_player = (current_player == 'X') ? 'O' : 'X';
-            }
+        // Cheking for a draw
+        if (moves_played >= 9) {
+            std::cout << "It's a draw! No one wins." << std::endl;
+            game_over = true;
+        }
+
+        // Checking if the function found a winner or draw
+        if (check_winner(game_board)) {
+            print_board(game_board);
+            std::cout << "Player (" << current_player << ") won!" << std::endl;
+            game_over = true;
+        }
+
+        if (!game_over) {
+            // Only switch players if the game is successfully continuing
+            switch_player(current_player);
+            
         }
 
         
