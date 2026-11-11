@@ -117,7 +117,7 @@ bool check_winner(char board[]) {
 }
 
 // Random Move Bot Function
-bool random_bot_move(char board[]) {
+bool random_bot_move(char board[], std::string &status_msg) {
 
     while(true) {
         // Randomly picks a number and playes that as a move if it is available on the board if not then the loop continues.  
@@ -125,7 +125,8 @@ bool random_bot_move(char board[]) {
         if (board[bot_move - 1] != 'X' && board[bot_move - 1] != 'O'){
             board[bot_move - 1] = 'O';
 
-            std::cout << "Bot move: " << bot_move << std::endl;
+            // Converting the bot_move to a string to print it on the console
+            status_msg = "Bot move: " + std::to_string(bot_move);
 
             return true;
         }
@@ -203,7 +204,7 @@ int main() {
         }
         // Asking the bot for move
         else {
-            if (random_bot_move(game_board)) {
+            if (random_bot_move(game_board, status_msg)) {
                 // Adding a move if everthing works fine without any illegal move or anything
                 moves_played ++;   
 
@@ -231,8 +232,6 @@ int main() {
 
             }
         }
-
-
 
         
     }
